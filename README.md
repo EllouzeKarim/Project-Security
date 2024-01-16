@@ -1,7 +1,7 @@
 # Project-Security
 Ce projet se concentre sur la mise en œuvre de mécanismes d'authentification sécurisée en utilisant OpenLDAP, SSH, Apache et OpenVPN, ainsi que sur la gestion des services réseau avec DNS. De plus, il explore l'intégration de Kerberos pour une authentification renforcée.
 
-#Partie 1 : Authentification avec OpenLDAP, SSH, Apache, OpenVPN
+### Partie 1 : Authentification avec OpenLDAP, SSH, Apache, OpenVPN
 Sec­tion 1 : Con­fig­ura­tion d'OpenLDAP
 1.1 Con­fig­urez un serveur OpenLDAP avec au moins deux utilisateurs et deux groupes.
 ```
@@ -28,7 +28,7 @@ Sec­tion 4 : Mise en place d'OpenVPN (15 points)
 4.2 Testez la connexion VPN avec succès en utilisant les informations d'OpenLDAP.
 4.3 Testez pour un client autorisé et un client non autorisé à lancer un tunnel VPN.
 
-Par­tie 2 : Gestion des Services Réseau avec DNS (40 points)
+## Par­tie 2 : Gestion des Services Réseau avec DNS (40 points)
 Sec­tion 1 : Con­fig­ura­tion d'un serveur DNS (20 points)
 1.1 Con­fig­urez un serveur DNS (Bind) sur une machine distincte.
 1.2 Ajoutez les enregistrements DNS nécessaires pour les serveurs OpenLDAP, Apache,
@@ -39,7 +39,7 @@ Sec­tion 2 : Validation et Test (20 points)
 2.2 Assurez-vous que les noms de domaine associés aux services sont correctement
 résolus.
 
-Par­tie 3 : Authen­ti­ca­tion avec Kerberos (40 points)
+# Par­tie 3 : Authen­ti­ca­tion avec Kerberos (40 points)
 Sec­tion 1 : Con­fig­ura­tion du serveur Kerberos (20 points)
 1.1 Installez et configurez un serveur Kerberos.
 1.2 Ajoutez des principaux et des poli­tiques de mot de passe pour les utilisateurs.
