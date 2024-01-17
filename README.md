@@ -1,4 +1,4 @@
-# Project-Security
+![p1s3q3_1](https://github.com/EllouzeKarim/Project-Security/assets/98825770/fa058288-ac7c-42cb-acb5-0ce68b8b21b6)# Project-Security
 Ce projet se concentre sur la mise en œuvre de mécanismes d'authentification sécurisée en utilisant OpenLDAP, SSH, Apache et OpenVPN, ainsi que sur la gestion des services réseau avec DNS. De plus, il explore l'intégration de Kerberos pour une authentification renforcée.
 
 # Partie 1 : Authentification avec OpenLDAP, SSH, Apache, OpenVPN
@@ -244,7 +244,48 @@ netstat -antup | grep -i 636
 
 ## Sec­tion 3 : Intégra­tion d'Apache 
 ### 3.1 Con­fig­urez Apache pour utiliser l'authen­ti­ca­tion OpenLDAP.
+Installer les dépendances 
+```
+sudo-get install libapache2-mod-ldap-userdir libapache2-mod-authnz-external libapache2-mod-authz-unixgorup
+```
 ### 3.2 Assurez-vous que l'accès aux pages web est limité aux membres du groupe approprié dans OpenLDAP.
+#### Étape 1: Créer un fichier de configuration 
+```
+sudo nano /etc/apache2/sites-available/auth-ldap.conf
+```
+Il contiendra :
+
+#### Étape 2: Créer le html de la page web
+```
+sudo mkdir /var/www/html/auth-ldap
+sudo nano /var/www/html/auth-ldap/index.html
+```
+```
+<html>
+<body>
+<div style ="width:100%; font-size: 40px; fonx-weight: bold; text-align: center;">
+Test Page For LDAP Auth
+</div>
+</body>
+</html>
+```
+#### Étape 3: Redémarrage des services et activation du site
+```
+a2ensite auth-ldap
+systemctl restart apache2
+```
+#### Étape 4: Vérification
+Se connecter sur localhost/auth-ldap
+![p1s3q3_1](https://github.com/EllouzeKarim/Project-Security/assets/98825770/ef7de0ba-15ed-4908-85ab-3465d8c73064)
+
+![p1s3q3_2](https://github.com/EllouzeKarim/Project-Security/assets/98825770/608b5592-7403-4696-8bb2-43f3838c0b53)
+
+![p1s3q3_3](https://github.com/EllouzeKarim/Project-Security/assets/98825770/609c1f5e-5632-4f10-9d5c-289f11ac6fa3)
+
+![p1s3q3_4](https://github.com/EllouzeKarim/Project-Security/assets/98825770/912a3bcc-5d40-4690-90d5-2aa5efa69915)
+
+![p1s3q3_5](https://github.com/EllouzeKarim/Project-Security/assets/98825770/421e5a11-c068-4acd-abb5-ba9714447852)
+
 ### 3.3 Testez pour un utilisateur autorisé et un utilisateur non autorisé à un site web de votre choix.
 
 ## Sec­tion 4 : Mise en place d'OpenVPN 
