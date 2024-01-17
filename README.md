@@ -18,8 +18,6 @@ Lancez la configuration du serveur LDAP et configurez votre nom de domaine:
 sudo dpkg-reconfigure slapd
 ```
 ![Capture d'écran 2024-01-17 085335](https://github.com/EllouzeKarim/Project-Security/assets/98825770/8c880564-1bd0-45bb-b988-29e9402c57c2)
-<img width="733" alt="Screenshot 2023-12-23 at 4 03 04 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/98825770/59c5374f-7e48-4093-8c31-dd4f2987fdd6">
-<img width="729" alt="Screenshot 2023-12-23 at 4 04 04 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/98825770/8362f3b6-aff8-4a89-bc2d-6203f5427191">
 
 #### Étape 3: Ajout des Groupes et des utilisateurs
 Créez le fichier add_content.ldif
