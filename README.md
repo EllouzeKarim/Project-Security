@@ -274,7 +274,7 @@ Test Page For LDAP Auth
 a2ensite auth-ldap
 systemctl restart apache2
 ```
-#### Étape 4: Vérification
+### 3.3 Testez pour un utilisateur autorisé et un utilisateur non autorisé à un site web de votre choix.
 Se connecter sur localhost/auth-ldap
 ![p1s3q3_1](https://github.com/EllouzeKarim/Project-Security/assets/98825770/ef7de0ba-15ed-4908-85ab-3465d8c73064)
 
@@ -286,7 +286,7 @@ Se connecter sur localhost/auth-ldap
 
 ![p1s3q3_5](https://github.com/EllouzeKarim/Project-Security/assets/98825770/421e5a11-c068-4acd-abb5-ba9714447852)
 
-### 3.3 Testez pour un utilisateur autorisé et un utilisateur non autorisé à un site web de votre choix.
+
 
 ## Sec­tion 4 : Mise en place d'OpenVPN 
 ### 4.1 Installez et con­fig­urez OpenVPN pour utiliser l'authen­ti­ca­tion OpenLDAP.
