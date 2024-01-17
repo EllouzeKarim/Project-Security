@@ -80,7 +80,7 @@ ldapadd -x -D cn=admin,dc=insat,dc=tn -W -f add_content.ldif
 
 ### 1.2 Ajoutez des informations de votre choix y compris le certificat x509 pour tous les utilisateurs.
 #### Étape 1: Ajout d'Informations Supplémentaires
-1.1 Créez le fichier LDIF pour les informations supplémentaires
+Créez le fichier LDIF pour les informations supplémentaires
 ```
    dn: uid=user1,ou=people,dc=insat,dc=tn
    changetype: modify
@@ -95,22 +95,22 @@ ldapadd -x -D cn=admin,dc=insat,dc=tn -W -f add_content.ldif
    add: mail
    mail: user2@insat.tn
 ```
-2.2 Exécuter ce fichier avec cette commande :
+Exécuter ce fichier avec cette commande :
 ```
 ldapmodify -x -D cn=admin,dc=insat,dc=tn -W -f additional-info.ldif
 ```
 #### Étape 2: Créer les certificats
-2.1 Créez un répertoire pour l'autorité de certification :
+Créez un répertoire pour l'autorité de certification :
 ```
 mkdir ~/auth
 ```
-2.2 Générez le certificat de l'autorité de certification (CA) :
+Générez le certificat de l'autorité de certification (CA) :
 ```
 openssl genrsa -out ca.priv 2048
 openssl rsa -in ca.priv -pubout -out ca.pub
 openssl req -x509 -new -days 3650 -key ca.priv -out ca.cert
 ```
-2.2 Générez le certificat des utilisateurs et les signer :
+Générez le certificat des utilisateurs et les signer :
 ```
 cd ~/user1
 openssl genrsa -out user1.priv 2048
@@ -127,12 +127,13 @@ openssl x509 -req -in ~/user1/user1.csr -CA ca.cert -CAkey ca.priv -CAcreateseri
 openssl x509 -req -in ~/user2/user2.csr -CA ca.cert -CAkey ca.priv -CAcreateserial -out ~/user2/user2.cert -days 3650
 ```
 #### Étape 3: Ajouter ces certificats
-3.1 Installez LDAP Account Manager (LAM) 
+Installez LDAP Account Manager (LAM) 
 ```
 sudo apt -y install ldap-account-manager
 ```
-3.2 Accédez à l'interface de gestion de LAM dans votre navigateur http://localhost/lam
-3.3 Ajoutez les certificats générés aux utlisateurs
+Accédez à l'interface de gestion de LAM dans votre navigateur http://localhost/lam
+
+Ajoutez les certificats générés aux utlisateurs
 
 ### 1.3 Assurez-vous que les utilisateurs peuvent s'authentifier avec succès sur le serveur OpenLDAP.
 #### Étape 1: Configuration de la Machine Cliente
@@ -174,7 +175,7 @@ sudo login
 
 ### 1.4 Testez la partie sécurisée de LDAP avec LDAPS et décrivez les différents avantages.
 #### Étape 1: Génération d'un Certificat SSL Auto-signé
-1.1 Générez un certificat auto-signé avec OpenSSL :
+Générez un certificat auto-signé avec OpenSSL :
 ```
 mkdir ~/ssl-ldap
 openssl genrsa -aes128 -out server.key 4096
@@ -182,7 +183,7 @@ openssl rsa -in server.key  -out server.key
 openssl req -new -days 3650 -key server.key -out server.csr
 sudo openssl x509 -in server.csr -out server.crt -req -signkey server/key -days 3650
 ```
-1.2 Copier le certificat et la clé dans /etc/ldap/sasl2
+Copier le certificat et la clé dans /etc/ldap/sasl2
 ```
 sudo cp server.key  /etc/ldap/sasl2
 sudo cp server.crt  /etc/ldap/sasl2
@@ -190,7 +191,7 @@ sudo cp /etc/ssl/certs/ca-certificates.crt /etc/ldap/sasl2
 sudo chown -R openldap:openldap /etc/ldap/sasl2
 ```
 #### Étape 2: Modification des fichiers de configuration 
-2.1 Créez un fichier de configuration
+Créez un fichier de configuration
 ```
 nano SSL-LDAP.ldif
 ```
@@ -205,11 +206,11 @@ olcTLSCertificateFile: /etc/ldap/sasl2/server.crt
 replace: olcTLSCertificateKeyFile
 olcTLSCertificateKeyFile: /etc/ldap/sasl2/server.key
 ```
-2.2 Exécuter le fichier de configuration
+Exécuter le fichier de configuration
 ```
 sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f SSL-LDAP.ldif
 ```
-2.3 Modifier /etc/default/slapd 
+Modifier /etc/default/slapd 
 ```
 sudo nano /etc/default/slapd
 ```
@@ -217,8 +218,7 @@ changer SLAPD_SERVICES en :
 ```
 SLAPD_SERVICES="ldap:/// ldapi:/// ldaps:///"
 ```
-2.3 Modifier /etc/ldap/lapd.conf
-Ajouter les deux lignes suivantes :
+Modifier /etc/ldap/lapd.conf en ajoutant les deux lignes suivantes :
 ```
 TLS_CACERT /etc/ldap/sasl2/ca-certificates.crt
 TLS REQCERT allow
