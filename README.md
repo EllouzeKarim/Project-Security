@@ -253,7 +253,20 @@ sudo-get install libapache2-mod-ldap-userdir libapache2-mod-authnz-external liba
 sudo nano /etc/apache2/sites-available/auth-ldap.conf
 ```
 Il contiendra :
-
+```
+<Directory /var/www/html/auth-ldap>
+        AuthName "ldap auth"
+        AuthType Basic
+        AuthBasicProvider ldap
+        AuthLDAPURL ldap://localhost/dc=example,dc=com?uid?sub?(objectCLass=*)
+        AuthLDAPGroupAttribute memberUid
+        AuthLDAPGroupAttributeIsDN off
+        AuthLDAPBindDN "cn=admin,dc=example,dc=com"
+        AuthLDAPBindPassword "azerty"
+        Require ldap-filter  (memberOf=cn=groupe1,ou=groups,dc=example,dc=com)
+        Require ldap-group cn=groupe1,ou=groups,dc=example,dc=com
+</Directory>
+```
 #### Étape 2: Créer le html de la page web
 ```
 sudo mkdir /var/www/html/auth-ldap
