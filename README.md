@@ -1,4 +1,3 @@
-![p1s3q3_1](https://github.com/EllouzeKarim/Project-Security/assets/98825770/fa058288-ac7c-42cb-acb5-0ce68b8b21b6)# Project-Security
 Ce projet se concentre sur la mise en œuvre de mécanismes d'authentification sécurisée en utilisant OpenLDAP, SSH, Apache et OpenVPN, ainsi que sur la gestion des services réseau avec DNS. De plus, il explore l'intégration de Kerberos pour une authentification renforcée.
 
 # Partie 1 : Authentification avec OpenLDAP, SSH, Apache, OpenVPN
