@@ -102,7 +102,7 @@ ldapmodify -x -D cn=admin,dc=insat,dc=tn -W -f additional-info.ldif
 #### Étape 2: Créer les certificats
 Créez un répertoire pour l'autorité de certification :
 ```
-mkdir ~/auth
+mkdir ~/auth && cd ~/auth 
 ```
 Générez le certificat de l'autorité de certification (CA) :
 ```
@@ -112,12 +112,12 @@ openssl req -x509 -new -days 3650 -key ca.priv -out ca.cert
 ```
 Générez le certificat des utilisateurs et les signer :
 ```
-cd ~/user1
+mkdir ~/user1 && cd ~/user1
 openssl genrsa -out user1.priv 2048
 openssl rsa -in user1.priv -pubout -out user1.pub
 openssl req -new -key user1.priv -out user1.csr
 
-cd ~/user2
+mkdir ~/user2 && cd ~/user2
 openssl genrsa -out user2.priv 2048
 openssl rsa -in user2.priv -pubout -out user2.pub
 openssl req -new -key user2.priv -out user2.csr
@@ -177,11 +177,11 @@ sudo login
 #### Étape 1: Génération d'un Certificat SSL Auto-signé
 Générez un certificat auto-signé avec OpenSSL :
 ```
-mkdir ~/ssl-ldap
+mkdir ~/ssl-ldap && cd ~/ssl-ldap
 openssl genrsa -aes128 -out server.key 4096
 openssl rsa -in server.key  -out server.key
 openssl req -new -days 3650 -key server.key -out server.csr
-sudo openssl x509 -in server.csr -out server.crt -req -signkey server/key -days 3650
+sudo openssl x509 -in server.csr -out server.crt -req -signkey server.key -days 3650
 ```
 Copier le certificat et la clé dans /etc/ldap/sasl2
 ```
@@ -198,6 +198,7 @@ nano SSL-LDAP.ldif
 ```
 dn: cn=config
 changetype: modify
+add: olcTLSCACertificateFile
 olcTLSCACertificateFile : /etc/ldap/sasl2/ca-certificates.crt
 -
 replace: olcTLSCertificateFile
