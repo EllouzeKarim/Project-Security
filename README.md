@@ -76,7 +76,7 @@ Exécuter votre fichier LDIF en utilisant la commande suivante :
 ```
 ldapadd -x -D cn=admin,dc=insat,dc=tn -W -f add_content.ldif
 ```
-
+![Capture d'écran 2024-01-17 123949](https://github.com/EllouzeKarim/Project-Security/assets/98825770/6eb8f627-9a64-479c-a5b3-449f4405a8c5)
 
 ### 1.2 Ajoutez des informations de votre choix y compris le certificat x509 pour tous les utilisateurs.
 #### Étape 1: Ajout d'Informations Supplémentaires
@@ -126,6 +126,10 @@ cd ~/auth
 openssl x509 -req -in ~/user1/user1.csr -CA ca.cert -CAkey ca.priv -CAcreateserial -out ~/user1/user1.cert -days 3650
 openssl x509 -req -in ~/user2/user2.csr -CA ca.cert -CAkey ca.priv -CAcreateserial -out ~/user2/user2.cert -days 3650
 ```
+![Capture d'écran 2024-01-17 132647](https://github.com/EllouzeKarim/Project-Security/assets/98825770/37ffb03e-9a10-41b1-af6a-850bea891885)
+![Capture d'écran 2024-01-17 132735](https://github.com/EllouzeKarim/Project-Security/assets/98825770/3fdbed1b-d74c-4a51-865a-41d0b0a57f6a)
+
+
 #### Étape 3: Ajouter ces certificats
 Installez LDAP Account Manager (LAM) 
 ```
@@ -134,6 +138,8 @@ sudo apt -y install ldap-account-manager
 Accédez à l'interface de gestion de LAM dans votre navigateur http://localhost/lam
 
 Ajoutez les certificats générés aux utlisateurs
+
+![Capture d'écran 2024-01-17 123735](https://github.com/EllouzeKarim/Project-Security/assets/98825770/92e9c090-06c7-4ebb-83bf-09c469117045)
 
 ### 1.3 Assurez-vous que les utilisateurs peuvent s'authentifier avec succès sur le serveur OpenLDAP.
 #### Étape 1: Configuration de la Machine Cliente
@@ -219,7 +225,11 @@ changer SLAPD_SERVICES en :
 ```
 SLAPD_SERVICES="ldap:/// ldapi:/// ldaps:///"
 ```
-Modifier /etc/ldap/lapd.conf en ajoutant les deux lignes suivantes :
+Modifier /etc/ldap/lapd.conf 
+```
+sudo nano /etc/ldap/lapd.conf 
+```
+en ajoutant les deux lignes suivantes :
 ```
 TLS_CACERT /etc/ldap/sasl2/ca-certificates.crt
 TLS REQCERT allow
@@ -232,15 +242,63 @@ sudo systemctl restart slapd
 ```
 ldapsearch -x -H ldaps://@ipserveur -b "dc=insat,dc=tn"
 ```
+![ldapsearch](https://github.com/EllouzeKarim/Project-Security/assets/98825770/e84f814c-7bef-4aef-bf4a-f63433515a70)
+
 Vérifiez le port
 ```
 netstat -antup | grep -i 636
 ```
+![image](https://github.com/EllouzeKarim/Project-Security/assets/98825770/4143a504-281e-49c3-9536-0291f894a1a8)
 
 ## Sec­tion 2 : Authen­ti­ca­tion SSH 
 ### 2.1 Acti­vez l'authen­ti­ca­tion SSH via OpenLDAP.
+#### Étape 1: Installation des packages requis 
+Installez les paquets nécessaires. Cela peut être fait avec les commandes suivantes
+```
+sudo apt-get install openssh-server libpam-ldap
+```
+#### Étape 2:  Configuration de sshd_config et de PAM 
+Modifiez le fichier de configuration du serveur SSH, généralement situé dans /etc/ssh/sshd_config
+```
+sudo nano /etc/ssh/sshd_config
+```
+Assurez-vous que les options suivantes sont définies :
+```
+PasswordAuthentication yes
+ChallengeResponseAuthentication yes
+UsePAM yes
+```
+Modifiez le fichier de configuration PAM SSH, généralement situé dans /etc/pam.d/sshd.
+```
+sudo nano /etc/pam.d/sshd
+```
+Ajoutez la ligne suivante en haut du fichier pour activer l’authentification LDAP :
+```
+auth required pam_ldap.so
+```
 ### 2.2 Restreignez l'accès SSH aux utilisateurs du groupe approprié dans OpenLDAP.
+Modifiez le fichier de configuration du contrôle d’accès, généralement situé dans /etc/security/access.conf.
+```
+sudo nano /etc/security/access.conf
+```
+Ajoutez la ligne suivante pour accorder l’accès aux utilisateurs du groupe LDAP « group1 » :
+```
+-:ALL EXCEPT group group1:ALL
+```
+
+#### Étape 3: Redémarrage des services
+```
+sudo service ssh restart
+```
+
 ### 2.3 Testez pour un utilisateur autorisé et un utilisateur non autorisé à SSH.
+Essayez de vous connecter avec un utilisateur qui appartient au groupe LDAP « group1 » et avec un qui n'y appartient pas :
+```
+ssh username@your_server_ip
+```
+![Capture d'écran 2024-01-17 222038](https://github.com/EllouzeKarim/Project-Security/assets/98825770/68e56e07-8283-4533-ae53-b6c99dbebb37)
+
+![Capture d'écran 2024-01-17 222402](https://github.com/EllouzeKarim/Project-Security/assets/98825770/322b3af8-a7e7-4637-93d6-6d1330f5555d)
 
 ## Sec­tion 3 : Intégra­tion d'Apache 
 ### 3.1 Con­fig­urez Apache pour utiliser l'authen­ti­ca­tion OpenLDAP.
