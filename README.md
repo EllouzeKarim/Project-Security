@@ -250,6 +250,24 @@ netstat -antup | grep -i 636
 ```
 ![image](https://github.com/EllouzeKarim/Project-Security/assets/98825770/4143a504-281e-49c3-9536-0291f894a1a8)
 
+
+LDAPS (LDAP Secure) est simplement une version sécurisée de LDAP qui utilise SSL/TLS (Secure Sockets Layer/Transport Layer Security) pour chiffrer les communications entre le client et le serveur LDAP. Avantages d'utiliser LDAPS par rapport à LDAP non sécurisé :
+
+####  Chiffrement des données : 
+LDAPS utilise SSL/TLS pour chiffrer les données échangées entre le client et le serveur. Cela assure la confidentialité des informations sensibles, telles que les identifiants et les données d'annuaire, pendant leur transmission sur le réseau.
+
+#### Intégrité des données : 
+En plus du chiffrement, SSL/TLS fournit également un mécanisme de vérification de l'intégrité des données. Cela signifie que les données échangées entre le client et le serveur ne peuvent pas être modifiées en transit sans que cela soit détecté.
+
+#### Authentification du serveur : 
+LDAPS permet la vérification de l'identité du serveur LDAP en utilisant des certificats SSL/TLS. Cela aide à prévenir les attaques de type « homme du milieu » en s'assurant que le client communique avec le serveur LDAP prévu.
+
+#### Protection contre l'interception passive : 
+L'utilisation de LDAPS protège contre l'interception passive des informations transitant sur le réseau. Sans chiffrement, les données peuvent être potentiellement interceptées et lues par des attaquants.
+
+#### Renforcement de la confiance :
+En utilisant LDAPS, les administrateurs peuvent renforcer la confiance dans la sécurité de leur infrastructure d'annuaire, ce qui est crucial pour les services d'authentification et d'autorisation.
+
 ## Sec­tion 2 : Authen­ti­ca­tion SSH 
 ### 2.1 Acti­vez l'authen­ti­ca­tion SSH via OpenLDAP.
 #### Étape 1: Installation des packages requis 
