@@ -303,8 +303,43 @@ Se connecter sur localhost/auth-ldap
 
 ## Sec­tion 4 : Mise en place d'OpenVPN 
 ### 4.1 Installez et con­fig­urez OpenVPN pour utiliser l'authen­ti­ca­tion OpenLDAP.
+Assurez-vous d'installer OpenVPN sur votre serveur Ubuntu:
+```
+sudo apt update
+sudo apt install openvpn
+```
+Éditez le fichier /etc/pam.d/openvpn: 
+```
+auth requisite pam_unix.so
+auth required pam_ldap.so
+account requisite pam_unix.so
+account required pam_ldap.so
+
+```
+Redémarrez les services OpenVPN et LDAP pour appliquer les changements :
+```
+sudo systemctl restart openvpn
+sudo systemctl restart slapd
+```
+
 ### 4.2 Testez la connexion VPN avec succès en utilisant les informations d'OpenLDAP.
-### 4.3 Testez pour un client autorisé et un client non autorisé à lancer un tunnel VPN.
+#### Server Configuration:
+<img width="728" alt="Screenshot 2024-01-18 at 6 11 38 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/561be19e-e2f7-468e-93de-5c1215e73293">
+
+exécuter le serveur openvpn
+```
+sudo openvpn --config server.ovpn
+```
+<img width="722" alt="Screenshot 2024-01-18 at 6 16 10 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/494fbaad-c8bc-47f9-9586-a8ccfa145785">
+
+#### Client Configuration:
+<img width="735" alt="Screenshot 2024-01-18 at 6 12 09 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/a5da6fb6-4eeb-4d2e-93d1-a321e04889d3">
+
+Utilisez un client OpenVPN pour vous connecter au serveur avec les informations d'authentification OpenLDAP:
+```
+sudo openvpn --config client.ovpn
+```
+<img width="728" alt="Screenshot 2024-01-18 at 6 15 55 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/c66b9794-7b55-4d46-acd5-bf137c070f5a">
 
 # Par­tie 2 : Gestion des Services Réseau avec DNS 
 ## Sec­tion 1 : Con­fig­ura­tion d'un serveur DNS (20 points)
