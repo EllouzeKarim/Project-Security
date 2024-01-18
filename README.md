@@ -178,6 +178,12 @@ sudo login
 #Donner le uid
 #Donner le password
 ```
+ou bien 
+```
+ldapsearch -x -H ldap://@ipserveur -b "dc=insat,dc=tn"
+```
+![image](https://github.com/EllouzeKarim/Project-Security/assets/98825770/bf0a8645-2f00-466d-ab0d-d6464e6f7205)
+
 
 ### 1.4 Testez la partie sécurisée de LDAP avec LDAPS et décrivez les différents avantages.
 #### Étape 1: Génération d'un Certificat SSL Auto-signé
