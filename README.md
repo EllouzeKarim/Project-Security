@@ -317,9 +317,103 @@ Se connecter sur localhost/auth-ldap
 # Par­tie 3 : Authen­ti­ca­tion avec Kerberos 
 ## Sec­tion 1 : Con­fig­ura­tion du serveur Kerberos
 ### 1.1 Installez et configurez un serveur Kerberos.
+
+On va ajouter les DNS pour kdc et client dans /etc/host:
+<img width="728" alt="Screenshot 2023-12-26 at 8 23 26 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/25b66d40-1efd-43b1-a69e-763dc2ba97f0">
+
+essayons de faire ping aux hosts kdc et client:
+
+<img width="687" alt="Screenshot 2023-12-26 at 8 34 31 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/c0acfb8b-9852-47fd-8f18-0409f091da0e">
+
+
+<img width="711" alt="Screenshot 2023-12-26 at 8 34 17 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/5b0a162d-5266-4176-a121-1034691e2ca8">
+
+**Synchronisation horaire:** Vérifiez que les deux machines utilisent le même fuseau horaire, tapez cette commande sur les deux machines
+```
+timedatectl
+```
+
+Ouvrez un terminal et exécutez les commandes suivantes pour installer les packages nécessaires :
+```
+sudo apt-get update
+sudo apt-get install krb5-kdc krb5-admin-server
+```
+
+
+<img width="716" alt="Screenshot 2023-12-26 at 9 23 21 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/9df446c2-e345-4c67-b363-f1c6a151dcac">
+<img width="721" alt="Screenshot 2023-12-26 at 9 26 27 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/595cd23a-6bdb-4bed-a6a2-34cc4d18365b">
+
+
+ 
 ### 1.2 Ajoutez des principaux et des poli­tiques de mot de passe pour les utilisateurs.
+
+  Créer la base de données des principaux:
+
   
+<img width="707" alt="Screenshot 2023-12-26 at 9 33 15 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/f47878cb-2a19-406e-b07d-f1579a765b14">
+
+
+Créer les principaux:
+
+<img width="623" alt="Screenshot 2023-12-26 at 9 40 14 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/19a44514-3119-477b-85e9-2d1cd7853a9c">
+<img width="636" alt="Screenshot 2023-12-26 at 9 43 49 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/05a27112-e1d9-4fd9-8e4a-67b0816f830a">
+<img width="726" alt="Screenshot 2023-12-26 at 9 51 18 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/cd3b5e4c-1510-441d-9320-62b83798ef2d">
+<img width="717" alt="Screenshot 2023-12-26 at 9 54 43 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/0388a7a3-087a-4851-8946-35b33963cbf6">
+
+
+Ajouter des poli­tiques de mot de passe pour les utilisateurs:
+
+<img width="727" alt="Screenshot 2023-12-26 at 9 59 02 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/794aa293-73cb-446b-a0f8-8ef8680ed3c7">
+<img width="738" alt="Screenshot 2024-01-12 at 1 15 46 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/8d744346-11e8-42a0-973a-4f42d31196e7">
+
+
 ## Sec­tion 2 : Authen­ti­ca­tion avec un Service Choisi 
 ### 2.1 Choisissez l'un des services pour implémenter l'authen­ti­ca­tion avec Kerberos.
-On a choisi d'implémenter un service api avec FLUSK.
+On a choisi d'implémenter un service api avec FLASK.
+nous ajouterons un principal pour utilisateur, le client qui utilisera l'application et nous lui donnerons un mot de passe:
+
+
+<img width="653" alt="Screenshot 2024-01-13 at 4 34 48 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/a19cc287-5673-4f0c-8c2f-804271977e78">
+
+Ajoutez cet utilisateur Unix correspondant à l'utilisateur principal:
+
+<img width="621" alt="Screenshot 2024-01-13 at 4 56 26 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/d7a8ea3e-34d0-42cd-aab7-595b5f980c47">
+
+<img width="485" alt="Screenshot 2024-01-13 at 4 57 08 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/f3fa3534-a1ae-4537-b3e8-0d28431e7f02">
+
+Installation des package nécessaires:
+
+<img width="732" alt="Screenshot 2024-01-13 at 11 12 06 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/20120f6e-8013-48b8-b6f8-a163e597794c">
+<img width="731" alt="Screenshot 2024-01-13 at 11 12 34 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/ca719b61-4e2e-426d-8a61-e096c38479ad">
+
 ### 2.2 Documentez et configurez le service choisi pour utiliser l'authen­ti­ca­tion Kerberos.
+
+#### Server Configuration
+Nous devons définir la variable KRB5_KTNAME pour référencer le fichier keytab qui contient la clé du service:
+```
+export KRB5_KTNAME=/etc/krb5.keytab
+```
+Exécutez ensuite le fichier server.py pour lancer le serveur Flask:
+```
+chmod +x server/server.py
+```
+<img width="907" alt="Screenshot 2024-01-18 at 12 56 26 AM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/5343dd08-3d00-4c19-be40-02b12a4e9768">
+
+#### Client Configuration
+Ensuite, vous devrez obtenir le TGT (Ticket Granting Ticket) pour pouvoir vous authentifier plus tard sans utiliser de mot de passe, vous n'entrerez le mot de passe qu'une seule fois pour obtenir le TGT.
+
+
+<img width="674" alt="Screenshot 2024-01-18 at 12 57 16 AM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/985f4257-52fa-4cea-83f9-c953d1e6caad">
+
+Vous pouvez maintenant exécuter le programme et commencer à interagir:
+
+```
+chmod +x client/client.py
+```
+<img width="699" alt="Screenshot 2024-01-18 at 12 58 56 AM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/a592113c-ee44-4b44-83d2-5399f254817f">
+
+On observe le nouveau TGT crée:
+
+
+<img width="351" alt="Screenshot 2024-01-18 at 12 59 07 AM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/e11f52f3-af5d-4bf6-b7da-e8e9d2447723">
+
