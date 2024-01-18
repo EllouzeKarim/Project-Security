@@ -478,7 +478,15 @@ $TTL 604800
 @       IN NS   server.insat.tn.
 10     IN PTR  server.insat.tn.
 ```
-
+Modifier le fichier /etc/resolv.conf :
+```
+sudo nano /etc/resolv.conf
+```
+```
+nameserver 192.168.56.102
+domain insat.tn
+search insat.tn
+```
 ## Sec­tion 2 : Validation et Test 
 ### 2.1 Testez la résolution DNS pour chacun des services configurés.
 Assurez-vous que le serveur DNS est en cours d'exécution.
