@@ -400,13 +400,110 @@ sudo openvpn --config client.ovpn
 <img width="728" alt="Screenshot 2024-01-18 at 6 15 55 PM" src="https://github.com/EllouzeKarim/Project-Security/assets/79056754/c66b9794-7b55-4d46-acd5-bf137c070f5a">
 
 # Par­tie 2 : Gestion des Services Réseau avec DNS 
-## Sec­tion 1 : Con­fig­ura­tion d'un serveur DNS (20 points)
+## Sec­tion 1 : Con­fig­ura­tion d'un serveur DNS 
 ### 1.1 Con­fig­urez un serveur DNS (Bind) sur une machine distincte.
+Configuration d'un serveur DNS (Bind)
+Assurez-vous que votre serveur DNS Bind est correctement installé et en cours d'exécution. Si ce n'est pas le cas, installez-le et démarrez-le :
+```
+sudo apt-get update
+sudo apt-get install bind9
+sudo systemctl start bind9
+sudo systemctl enable bind9
+cd /etc/bind
+```
+Ouvrez le fichier named.conf.options et assurez-vous que les serveurs de renvoi (forwarders) sont correctement configurés :
+```
+sudo nano named.conf.options
+```
+```
+forwarders {
+     192.168.56.102;
+     8.8.8.8;
+};
+```
+Ouvrez le fichier named.conf.local et ajoutez les zones pour le domaine et la zone inversée :
+```
+sudo nano named.conf.local 
+```
+```
+zone "insat.tn" {
+    type master;
+    file "/etc/bind/db.insat.tn";
+};
+
+zone "56.168.192.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.reverse.tn";
+};
+```
 ### 1.2 Ajoutez les enregistrements DNS nécessaires pour les serveurs OpenLDAP, Apache, et OpenVPN.
+Créer le fichier db.insat.tn à partir de db.local:
+```
+sudo cp db.local db.insat.tn
+```
+Modifier le fichier db.insat.tn :
+```
+sudo nano db.insat.tn 
+```
+```
+$TTL 604800
+@       IN SOA  server.insat.tn. root.insat.tn. (
+                3         ; Serial
+                604800    ; Refresh
+                86400     ; Retry
+                2419200   ; Expire
+                604800    ; Minimum TTL
+)
+
+@       IN NS   server.insat.tn.
+@       IN A    192.168.56.102
+@       IN AAAA ::1
+server  IN A    192.168.56.102
+apache  IN A    192.168.56.102
+```
+Modifier le fichier db.reverse.tn :
+```
+sudo nano db.reverse.tn
+```
+```
+$TTL 604800
+@       IN SOA  server.insat.tn. root.insat.tn. (
+                3         ; Serial
+                604800    ; Refresh
+                86400     ; Retry
+                2419200   ; Expire
+                604800    ; Minimum TTL
+)
+
+@       IN NS   server.insat.tn.
+10     IN PTR  server.insat.tn.
+```
 
 ## Sec­tion 2 : Validation et Test 
 ### 2.1 Testez la résolution DNS pour chacun des services configurés.
+Assurez-vous que le serveur DNS est en cours d'exécution.
+```
+sudo systemctl restart bind9
+sudo systemctl status bind9
+```
+Utilisez la commande nslookup pour tester la résolution DNS :
+```
+nslookup server.insat.tn
+nslookup apache.insat.tn
+```
+![image](https://github.com/EllouzeKarim/Project-Security/assets/98825770/ba10c9d6-4481-4635-8c47-197f8d5a8ad5)
+
 ### 2.2 Assurez-vous que les noms de domaine associés aux services sont correctement résolus.
+```
+nslookup 192.168.56.102
+```
+![image](https://github.com/EllouzeKarim/Project-Security/assets/98825770/73fe8a68-3741-4bd8-b119-a62c737e1ce7)
+
+![image](https://github.com/EllouzeKarim/Project-Security/assets/98825770/4ca9490a-2997-4f6f-8049-143ac894791c)
+
+
+![image](https://github.com/EllouzeKarim/Project-Security/assets/98825770/c719437e-94c9-4716-bda1-629ec06c4182)
+
 
 # Par­tie 3 : Authen­ti­ca­tion avec Kerberos 
 ## Sec­tion 1 : Con­fig­ura­tion du serveur Kerberos
